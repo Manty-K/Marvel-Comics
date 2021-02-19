@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:marvel/widgets/comic_info.dart';
 import 'marvel.dart';
 import 'widgets/comic_card.dart';
 
 class ComicScreen extends StatelessWidget {
+  Marvel _marvel = Marvel();
   ScrollController _scrollController = ScrollController();
   int characterId;
   int availableComic;
@@ -10,7 +12,6 @@ class ComicScreen extends StatelessWidget {
   ComicScreen(this.characterId, this.availableComic, this.characterName);
   String comicData;
 
-  Marvel _marvel = Marvel();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -18,7 +19,6 @@ class ComicScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             comicData = snapshot.data;
-            print(comicData);
             return Scaffold(
               appBar: AppBar(
                 centerTitle: true,
@@ -32,9 +32,19 @@ class ComicScreen extends StatelessWidget {
                   itemCount: availableComic,
                   itemBuilder: (context, index) {
                     return ComicCard(
-                      _marvel.getComicTitle(comicData, index),
-                      _marvel.getComicDescription(comicData, index),
-                      _marvel.getComicImageURL(comicData, index),
+                      comicName: _marvel.getComicTitle(comicData, index),
+                      comicDescription:
+                          _marvel.getComicDescription(comicData, index),
+                      url: _marvel.getComicImageURL(comicData, index),
+                      openComic: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ComicInfo(_marvel
+                                .getComicIDFromCharacter(comicData, index)),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),

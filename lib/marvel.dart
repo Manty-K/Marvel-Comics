@@ -16,6 +16,8 @@ For example, a user with a public key of "1234" and a private key of "abcd" coul
 
   String baseEndPoint = 'http://gateway.marvel.com/v1/public/characters';
 
+  String comicEndPoint = 'http://gateway.marvel.com/v1/public/comics';
+
   int timestamp = DateTime.now().millisecondsSinceEpoch;
 
   String getTimeStamp() {
@@ -57,10 +59,22 @@ For example, a user with a public key of "1234" and a private key of "abcd" coul
         available.toString();
   }
 
+  String generateComicInfoURL(int id) {
+    return comicEndPoint +
+        '/' +
+        id.toString() +
+        '?ts=' +
+        getTimeStamp() +
+        '&apikey=' +
+        publicKey +
+        '&hash=' +
+        generateHash(getTimeStamp(), publicKey, privateKey);
+  }
+
   Future<String> getData(int offset) async {
     http.Response response = await http.get(generatedUrl(offset));
     String data = response.body;
-    print(response.statusCode);
+    print('Character Data:' + response.statusCode.toString());
     return data;
   }
 
@@ -68,14 +82,16 @@ For example, a user with a public key of "1234" and a private key of "abcd" coul
     http.Response response =
         await http.get(generateComicURL(characterId, available));
     String data = response.body;
-    print(response.statusCode);
+    print('Comics Data:' + response.statusCode.toString());
     return data;
   }
 
-  // void printData() async {
-  //   String data = await getData();
-  //   print(data);
-  // }
+  Future<String> getComicInfoData(int id) async {
+    http.Response response = await http.get(generateComicInfoURL(id));
+    String data = response.body;
+    print('Comic Info Data: ' + response.statusCode.toString());
+    return data;
+  }
 
   String getCharacterName(String data, int index) {
     try {
@@ -167,6 +183,15 @@ For example, a user with a public key of "1234" and a private key of "abcd" coul
     //data.results[0].id
     try {
       return jsonDecode(data)['data']['results'][index]['id'];
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  int getComicPrintPrice(String data, int index) {
+    //data.results[0].prices[0].price
+    try {
+      return jsonDecode(data)['results'][0]['prices'][0]['price'];
     } catch (e) {
       return 0;
     }
