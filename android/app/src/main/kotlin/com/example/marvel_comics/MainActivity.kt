@@ -1,4 +1,4 @@
-package site.manthan.marvel
+package com.example.marvel_comics
 
 import io.flutter.embedding.android.FlutterActivity
 

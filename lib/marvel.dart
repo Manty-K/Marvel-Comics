@@ -72,7 +72,7 @@ For example, a user with a public key of "1234" and a private key of "abcd" coul
   }
 
   Future<String> getData(int offset) async {
-    http.Response response = await http.get(generatedUrl(offset));
+    http.Response response = await http.get(Uri.parse(generatedUrl(offset)));
     String data = response.body;
     print('Character Data:' + response.statusCode.toString());
     return data;
@@ -80,14 +80,15 @@ For example, a user with a public key of "1234" and a private key of "abcd" coul
 
   Future<String> getComicData(int characterId, int available) async {
     http.Response response =
-        await http.get(generateComicURL(characterId, available));
+        await http.get(Uri.parse(generateComicURL(characterId, available)));
     String data = response.body;
     print('Comics Data:' + response.statusCode.toString());
     return data;
   }
 
   Future<String> getComicInfoData(int id) async {
-    http.Response response = await http.get(generateComicInfoURL(id));
+    http.Response response =
+        await http.get(Uri.parse(generateComicInfoURL(id)));
     String data = response.body;
     print('Comic Info Data: ' + response.statusCode.toString());
     return data;
