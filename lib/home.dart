@@ -79,7 +79,11 @@ class _HomeState extends State<Home> {
       ),
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Marvel Characters', style: GoogleFonts.anton()),
+        title: Text(
+          'Marvel Characters',
+          style: GoogleFonts.anton(),
+        ),
+        backgroundColor: Colors.red,
       ),
       body: FutureBuilder(
         future: _marvel.getData(offsetValue),
